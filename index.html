@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ek minute?</title>
+<meta property="og:title" content="Ek minute?">
+<meta property="og:description" content="Sirf tumhare liye.">
+<meta name="description" content="Sirf tumhare liye.">
+<meta name="theme-color" content="#0c0a1a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0a1a;--text:#f3eef6;--dim:#a79db5;--pink:#ffb7d1;--ink:#2a1f2d}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.aurora{position:fixed;inset:0;overflow:hidden;z-index:0}
+.aurora i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:drift 20s ease-in-out infinite alternate}
+.aurora i:nth-child(1){width:60vmax;height:60vmax;left:-22vmax;top:-18vmax;background:#3b2a8f}
+.aurora i:nth-child(2){width:50vmax;height:50vmax;right:-20vmax;top:25vh;background:#8a2a6e;animation-duration:25s}
+.aurora i:nth-child(3){width:55vmax;height:40vmax;left:8vw;bottom:-24vmax;background:#23507a;animation-duration:29s}
+@keyframes drift{to{transform:translate(8vmax,-6vmax) scale(1.18)}}
+#stars,#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#stars{z-index:1}#fx{z-index:5}
+.scene{position:fixed;inset:0;z-index:2;display:none;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s;
+  padding:calc(env(safe-area-inset-top,0px) + 24px) 20px calc(env(safe-area-inset-bottom,0px) + 24px)}
+.scene.on{display:flex;animation:fade 1s ease both}
+.scene.out{opacity:0}
+@keyframes fade{from{opacity:0}}
+.btn{font:inherit;font-weight:600;font-size:1rem;color:var(--ink);background:var(--pink);border:0;border-radius:999px;padding:14px 36px;cursor:pointer;
+  box-shadow:0 0 28px #ffb7d155;transition:transform .15s,opacity .8s}
+.btn:active{transform:scale(.96)}
+.btn:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.later{opacity:0;pointer-events:none}.later.show{opacity:1;pointer-events:auto}
+/* pages */
+#stack{position:relative;width:min(76vw,380px);height:min(52vh,400px);left:-18px;animation:bob 6s ease-in-out infinite}
+@keyframes bob{50%{translate:0 -6px}}
+.page{position:absolute;inset:0;background:#fff7f2;color:var(--ink);border-radius:18px;border-top:6px solid var(--pink);padding:30px 26px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;gap:14px;box-shadow:0 18px 50px #0007;opacity:0;
+  transition:transform .95s cubic-bezier(.2,.85,.2,1),opacity .6s,filter .6s;transform-origin:left bottom;cursor:pointer}
+.page .no{position:absolute;top:14px;right:18px;font-size:.78rem;color:#b69aa8;font-weight:600;letter-spacing:.08em}
+.page h2{font-size:clamp(1.6rem,7vw,2.1rem);font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.page p{font-size:1.05rem;line-height:1.65;color:#5a4a5e;font-weight:400}
+.pl{opacity:0;transform:translateY(12px);transition:opacity .8s,transform .8s}
+.page.cur .pl{opacity:1;transform:none;transition-delay:calc(var(--i)*.4s + .55s)}
+#dots{display:flex;gap:9px;margin-top:30px}
+#dots i{width:7px;height:7px;border-radius:50%;background:#ffffff30;transition:all .5s}
+#dots i.on{background:var(--pink);width:22px;border-radius:4px}
+#next{margin-top:26px}
+/* scratch */
+#scratch h2{font-size:1.5rem;font-weight:600;margin-bottom:22px}
+.scard{position:relative;width:min(84vw,360px);height:min(34vh,250px);border-radius:18px;overflow:hidden;box-shadow:0 18px 50px #0007;animation:pop 1s cubic-bezier(.2,.9,.2,1.1) both}
+@keyframes pop{from{opacity:0;transform:scale(.85) rotate(-4deg)}}
+.under{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;background:#fff7f2;color:var(--ink);font-size:1.3rem;line-height:1.55;font-weight:600}
+#sc{position:absolute;inset:0;width:100%;height:100%;touch-action:none;transition:opacity 1s;cursor:crosshair}
+#sc.clear{opacity:0;pointer-events:none}
+#shint{margin-top:22px;color:var(--dim);font-size:.92rem;font-weight:300;transition:opacity .5s}
+#toTree{margin-top:26px}
+/* tree */
+#treeScene{justify-content:flex-start}
+#msg{width:100%;max-width:30rem;text-align:center;padding:6px 8px 0;flex:none}
+#msg h1{font-size:clamp(1.8rem,7.5vw,2.6rem);font-weight:600;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px}
+#msg h1 span{display:block;background:linear-gradient(100deg,#ffb7d1 20%,#fff 45%,#ffb7d1 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:-220% 0}}
+#msg .ln{font-size:1.05rem;line-height:1.6;font-weight:300;margin-top:6px}
+#msg .t{opacity:0;transform:translateY(10px);transition:opacity 1.2s,transform 1.2s}
+#msg.show .t{opacity:1;transform:none;transition-delay:calc(var(--i)*.9s)}
+#msg .by{color:var(--dim);font-size:.9rem;margin-top:14px}
+#msg a{color:var(--dim);font-size:.8rem;text-decoration:underline;cursor:pointer;display:inline-block;margin-top:12px}
+#treeBox{flex:1;width:100%;min-height:0;position:relative}
+#tree{position:absolute;inset:0;width:100%;height:100%}
+@media (min-width:900px){
+  #stack{width:420px;height:440px}
+  .scard{width:420px;height:280px}
+}
+@media (min-width:900px) and (orientation:landscape){
+  #treeScene{flex-direction:row;align-items:center;justify-content:center;gap:4vw;padding:4vh 6vw}
+  #msg{text-align:left;max-width:34rem;flex:0 0 42%}
+  #msg h1{font-size:3.3rem}
+  #msg .ln{font-size:1.2rem}
+  #treeBox{flex:0 0 52%;height:92vh}
+}
+@media (prefers-reduced-motion:reduce){.aurora i,#stack,#msg h1 span{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i><i></i></div>
+<canvas id="stars"></canvas>
+<canvas id="fx"></canvas>
+
+<section class="scene on" id="pages">
+  <div id="stack"></div>
+  <div id="dots"></div>
+  <button class="btn" id="next">Aage</button>
+</section>
+
+<section class="scene" id="scratch">
+  <h2>Ek cheez aur</h2>
+  <div class="scard">
+    <div class="under">Tumhare jaisi dost milna meri luck hai.</div>
+    <canvas id="sc"></canvas>
+  </div>
+  <p id="shint">Ungli se ragdo</p>
+  <button class="btn later" id="toTree">Aage</button>
+</section>
+
+<section class="scene" id="treeScene">
+  <div id="msg">
+    <h1 class="t" style="--i:0">Happy Birthday,<span id="nm"></span></h1>
+    <p class="ln t" style="--i:1" id="l0"></p>
+    <p class="ln t" style="--i:2" id="l1"></p>
+    <p class="ln t" style="--i:3" id="l2"></p>
+    <p class="by t" style="--i:4" id="by"></p>
+    <a class="t" style="--i:5" id="again">Dobara dekho</a>
+  </div>
+  <div id="treeBox"><canvas id="tree"></canvas></div>
+</section>
+
+<script>
+/* ===== yahan badlo ===== */
+const NAME = "Fiza";
+const FROM = "TrollFragz";            // "" kar do to nahi dikhega
+const PAGES = [
+  { h: "Ek minute,", p: ["kuch kehna tha tumse."] },
+  { h: "Dedh saal.", p: ["Hum Hive pe mile the, aur tab se baat chal rahi hai.", "Pata hi nahi chala itna time kaise nikal gaya."] },
+  { h: "Online dosti", p: ["aksar kuch din ki hoti hai.", "Hamari dedh saal se chal rahi hai, aur ye mere liye bohot badi baat hai."] },
+  { h: "Tum mere best friends mein se ek ho.", p: ["Ye kehna tha, bas kabhi kaha nahi."] }
+];
+const FINAL = [
+  "Tum ek bohot achhi insaan ho, aur mujhe khushi hai ki tum meri life mein ho.",
+  "Ye saal tumhare liye bohot saari khushiyan lekar aaye.",
+  "Stay happy always."
+];
+/* ======================== */
+
+const $ = s => document.querySelector(s);
+const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+const rnd = (a, b) => a + Math.random() * (b - a);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const easeIO = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+/* soft pink sprites */
+const PINKS = ['#ffd1e0', '#ffb7d1', '#ffc8dd', '#fff0f5', '#ff9fc2'];
+const SPR = PINKS.map(c => {
+  const s = document.createElement('canvas'); s.width = s.height = 48;
+  const g = s.getContext('2d'), r = g.createRadialGradient(24, 24, 0, 24, 24, 24);
+  r.addColorStop(0, c); r.addColorStop(.42, c + 'cc'); r.addColorStop(1, c + '00');
+  g.fillStyle = r; g.fillRect(0, 0, 48, 48); return s;
+});
+
+/* ---------- background canvases ---------- */
+const sCv = $('#stars'), sX = sCv.getContext('2d'), fCv = $('#fx'), fX = fCv.getContext('2d');
+let W, H, dpr = Math.min(devicePixelRatio || 1, 2), stars = [], sp = [], shoot = null;
+function fit() {
+  W = innerWidth; H = innerHeight;
+  [sCv, fCv].forEach(c => { c.width = W * dpr; c.height = H * dpr; });
+  sX.setTransform(dpr, 0, 0, dpr, 0, 0); fX.setTransform(dpr, 0, 0, dpr, 0, 0);
+  stars = Array.from({ length: Math.round(W * H / 6000) }, () => ({ x: rnd(0, W), y: rnd(0, H), r: rnd(.3, 1.4), s: rnd(.02, .14), p: rnd(0, 6) }));
+}
+fit(); addEventListener('resize', fit);
+function spark(x, y, n = 6, f = 2) {
+  for (let i = 0; i < n && sp.length < 350; i++) sp.push({ x, y, vx: rnd(-1, 1) * f, vy: rnd(-1.4, .5) * f, life: 0, max: rnd(30, 65), s: rnd(8, 20), k: Math.floor(rnd(0, 5)) });
+}
+addEventListener('pointerdown', e => spark(e.clientX, e.clientY, 14, 3));
+addEventListener('pointermove', e => { if (e.pressure > 0 || e.pointerType === 'mouse') spark(e.clientX, e.clientY, 1, 1.2); });
+addEventListener('contextmenu', e => e.preventDefault());
+
+/* ---------- pages ---------- */
+let cur = 0, lock = false;
+const stack = $('#stack'), pg = [];
+PAGES.forEach((d, i) => {
+  const el = document.createElement('div'); el.className = 'page';
+  el.innerHTML = `<div class="no">${i + 1} / ${PAGES.length}</div><h2 class="pl" style="--i:0">${d.h}</h2>` +
+    d.p.map((t, k) => `<p class="pl" style="--i:${k + 1}">${t}</p>`).join('');
+  el.style.transform = 'translateY(70px) scale(.94)';
+  stack.appendChild(el); pg.push(el);
+  const dot = document.createElement('i'); $('#dots').appendChild(dot);
+});
+function layout(first) {
+  pg.forEach((el, i) => {
+    const d = i - cur;
+    el.style.transitionDelay = first ? (d * .12) + 's' : '0s';
+    if (d < 0) { el.style.transform = 'translate(-135%,-8%) rotate(-16deg)'; el.style.opacity = 0; el.style.zIndex = 10 + d; el.classList.remove('cur'); }
+    else if (d <= 3) {
+      el.style.transform = `translate(${d * 15}px,${d * 5}px) rotate(${d * 1.4}deg) scale(${1 - d * .015})`;
+      el.style.opacity = 1; el.style.zIndex = 20 - d; el.style.filter = `brightness(${1 - d * .07})`; el.classList.toggle('cur', d === 0);
+    } else { el.style.transform = 'translate(48px,16px) rotate(4deg)'; el.style.opacity = 0; el.style.zIndex = 1; }
+  });
+  [...$('#dots').children].forEach((x, i) => x.classList.toggle('on', i === cur));
+  $('#next').textContent = cur === PAGES.length - 1 ? 'Ek cheez aur' : 'Aage';
+}
+setTimeout(() => layout(true), 150);
+function next() {
+  if (lock) return;
+  if (cur === PAGES.length - 1) { lock = true; go('#scratch', setupScratch); return; }
+  lock = true; cur++; layout(); buzz(12); setTimeout(() => lock = false, 750);
+}
+$('#next').addEventListener('click', next);
+stack.addEventListener('click', next);
+
+function go(id, cb) {
+  const c = document.querySelector('.scene.on'); c.classList.add('out');
+  setTimeout(() => { c.classList.remove('on', 'out'); $(id).classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => cb && cb())); }, 650);
+}
+
+/* ---------- scratch card ---------- */
+const sc = $('#sc'); let sctx, SW, SH, hit, hitN, GC = 30, GR = 18, BR = 26, last = null, down = false, sdone = false;
+function setupScratch() {
+  const r = sc.parentElement.getBoundingClientRect(); SW = r.width; SH = r.height; BR = Math.max(22, SW * .075);
+  sc.width = SW * dpr; sc.height = SH * dpr; sctx = sc.getContext('2d'); sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const g = sctx.createLinearGradient(0, 0, SW, SH);
+  g.addColorStop(0, '#e6bfd3'); g.addColorStop(.5, '#f8e7f0'); g.addColorStop(1, '#cfa0bf');
+  sctx.fillStyle = g; sctx.fillRect(0, 0, SW, SH);
+  for (let i = 0; i < 500; i++) { sctx.fillStyle = Math.random() < .5 ? `rgba(255,255,255,${rnd(.1, .5)})` : `rgba(120,60,110,${rnd(.04, .14)})`; sctx.fillRect(rnd(0, SW), rnd(0, SH), rnd(1, 2.5), rnd(1, 2.5)); }
+  sctx.save(); sctx.translate(SW / 2, SH / 2); sctx.rotate(-.4);
+  const sh = sctx.createLinearGradient(-SW, 0, SW, 0); sh.addColorStop(.35, 'rgba(255,255,255,0)'); sh.addColorStop(.5, 'rgba(255,255,255,.35)'); sh.addColorStop(.65, 'rgba(255,255,255,0)');
+  sctx.fillStyle = sh; sctx.fillRect(-SW, -SH, SW * 2, SH * 2); sctx.restore();
+  sctx.fillStyle = 'rgba(90,40,90,.6)'; sctx.font = '600 18px Inter,system-ui,sans-serif'; sctx.textAlign = 'center'; sctx.textBaseline = 'middle';
+  sctx.fillText('Yahan ragdo', SW / 2, SH / 2);
+  hit = new Uint8Array(GC * GR); hitN = 0; sdone = false;
+}
+function mark(x, y) {
+  const cw = SW / GC, ch = SH / GR;
+  for (let gx = clamp(Math.floor((x - BR) / cw), 0, GC - 1); gx <= clamp(Math.ceil((x + BR) / cw), 0, GC - 1); gx++)
+    for (let gy = clamp(Math.floor((y - BR) / ch), 0, GR - 1); gy <= clamp(Math.ceil((y + BR) / ch), 0, GR - 1); gy++) {
+      const k = gy * GC + gx; if (hit[k]) continue;
+      const dx = (gx + .5) * cw - x, dy = (gy + .5) * ch - y;
+      if (dx * dx + dy * dy < BR * BR * .9) { hit[k] = 1; hitN++; }
+    }
+}
+function scratchTo(x, y) {
+  sctx.globalCompositeOperation = 'destination-out'; sctx.lineCap = sctx.lineJoin = 'round'; sctx.lineWidth = BR * 2;
+  sctx.beginPath(); sctx.moveTo(last.x, last.y); sctx.lineTo(x, y); sctx.stroke();
+  const d = Math.hypot(x - last.x, y - last.y), n = Math.max(1, Math.ceil(d / (BR * .4)));
+  for (let i = 1; i <= n; i++) mark(last.x + (x - last.x) * i / n, last.y + (y - last.y) * i / n);
+  last = { x, y };
+  if (!sdone && hitN / (GC * GR) > .5) finishScratch();
+}
+const pos = e => { const r = sc.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+sc.addEventListener('pointerdown', e => { if (sdone) return; down = true; sc.setPointerCapture(e.pointerId); last = pos(e); $('#shint').style.opacity = 0; scratchTo(last.x + .1, last.y); });
+sc.addEventListener('pointermove', e => { if (down && !sdone) { const p = pos(e); scratchTo(p.x, p.y); } });
+['pointerup', 'pointercancel'].forEach(v => sc.addEventListener(v, () => down = false));
+function finishScratch() {
+  sdone = true; sc.classList.add('clear'); buzz([30, 30, 70]);
+  const r = sc.getBoundingClientRect(); for (let i = 0; i < 6; i++) setTimeout(() => spark(r.left + rnd(0, r.width), r.top + rnd(0, r.height), 14, 3.5), i * 90);
+  setTimeout(() => $('#toTree').classList.add('show'), 1100);
+}
+$('#toTree').addEventListener('click', () => go('#treeScene', startTree));
+
+/* ---------- tree ---------- */
+let TW, TH, tX, br = [], bl = [], pt = [], geo = {}, T0 = 0, running = false, shown = false;
+function sizeTree() {
+  const b = $('#treeBox').getBoundingClientRect(); TW = b.width; TH = b.height;
+  const c = $('#tree'); c.width = TW * dpr; c.height = TH * dpr; tX = c.getContext('2d'); tX.setTransform(dpr, 0, 0, dpr, 0, 0);
+  buildTree();
+}
+function grow(x, y, a, len, w, d, t) {
+  const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len, w2 = w * .72, dur = d === 0 ? 1500 : 600 - d * 60;
+  br.push({ x, y, x2, y2, w1: w, w2, t0: t, t1: t + dur, d });
+  if (d >= 3) return;
+  const kids = d === 0 ? 3 : 2, nt = t + dur * .85, sprd = d === 0 ? .62 : .5;
+  for (let i = 0; i < kids; i++) {
+    const off = kids === 3 ? (i - 1) * sprd : (i ? 1 : -1) * sprd * .8;
+    grow(x2, y2, a + off + rnd(-.12, .12), len * (d === 0 ? .46 : .7), w2 * .95, d + 1, nt);
+  }
+}
+function buildTree() {
+  const R = Math.max(60, Math.min(TW * .44, TH * .32)), cy = R * 1.05 + 6, bx = TW / 2, by = TH - 6, fork = cy + R * .6;
+  geo = { R, cy, bx, by }; br = [];
+  grow(bx, by, -Math.PI / 2 + rnd(-.03, .03), Math.max(60, by - fork), Math.max(12, R * .16), 0, 0);
+  const C = [[0, 0, 1], [-.55, .2, .6], [.55, .2, .6], [-.28, -.42, .58], [.3, -.38, .55]].map(([a, b, c]) => ({ x: bx + a * R, y: cy + b * R, r: c * R }));
+  const tot = C.reduce((s, c) => s + c.r * c.r, 0), n = Math.round(clamp(TW * TH / 420, 320, 720)); bl = [];
+  for (let i = 0; i < n; i++) {
+    let k = rnd(0, tot), c = C[0]; for (const q of C) { k -= q.r * q.r; if (k <= 0) { c = q; break; } }
+    const a = rnd(0, 6.283), d = Math.sqrt(Math.random()) * c.r, tx = c.x + Math.cos(a) * d, ty = c.y + Math.sin(a) * d;
+    const sx = bx + rnd(-18, 18), sy = by - rnd(0, 14);
+    bl.push({ sx, sy, tx, ty, px: (sx + tx) / 2 + rnd(-1, 1) * Math.max(50, R * .7), py: (sy + ty) / 2 - rnd(0, R * .4), delay: rnd(0, 1800), dur: rnd(1500, 2300), r: rnd(2.6, 6.4), k: i % 5, ph: rnd(0, 6.28) });
+  }
+}
+const WOOD = ['#6e4c3b', '#7d5845', '#8c6551', '#9b7360'];
+function limb(b, p) {
+  const e = easeOut(p), x = b.x + (b.x2 - b.x) * e, y = b.y + (b.y2 - b.y) * e, w2 = b.w1 + (b.w2 - b.w1) * e;
+  const a = Math.atan2(b.y2 - b.y, b.x2 - b.x), nx = -Math.sin(a), ny = Math.cos(a);
+  tX.fillStyle = WOOD[b.d]; tX.beginPath();
+  tX.moveTo(b.x + nx * b.w1 / 2, b.y + ny * b.w1 / 2); tX.lineTo(x + nx * w2 / 2, y + ny * w2 / 2);
+  tX.lineTo(x - nx * w2 / 2, y - ny * w2 / 2); tX.lineTo(b.x - nx * b.w1 / 2, b.y - ny * b.w1 / 2); tX.closePath(); tX.fill();
+  tX.beginPath(); tX.arc(x, y, w2 / 2, 0, 6.3); tX.fill();
+  if (b.d) { tX.beginPath(); tX.arc(b.x, b.y, b.w1 / 2, 0, 6.3); tX.fill(); }
+}
+function drawTree(now) {
+  const t = now - T0, { R, bx, by } = geo; tX.clearRect(0, 0, TW, TH); tX.globalAlpha = 1;
+  const g = clamp(t / 1000), gr0 = R * 1.1 * g + 1;
+  tX.save(); tX.translate(bx, by + 2); tX.scale(1, .22);
+  const gr = tX.createRadialGradient(0, 0, 0, 0, 0, gr0); gr.addColorStop(0, 'rgba(255,183,209,.45)'); gr.addColorStop(1, 'rgba(255,183,209,0)');
+  tX.fillStyle = gr; tX.beginPath(); tX.arc(0, 0, gr0, 0, 6.3); tX.fill(); tX.restore();
+  for (const b of br) { const p = clamp((t - b.t0) / (b.t1 - b.t0)); if (p > 0) limb(b, p); }
+  for (const o of bl) {
+    const u = clamp((t - 1900 - o.delay) / o.dur); if (u <= 0) continue;
+    const e = easeIO(u), m = 1 - e; let s = o.r * 4.2;
+    let x = m * m * o.sx + 2 * m * e * o.px + e * e * o.tx, y = m * m * o.sy + 2 * m * e * o.py + e * e * o.ty;
+    if (u >= 1) { x += Math.sin(now / 900 + o.ph) * 1.5; y += Math.cos(now / 1100 + o.ph) * 1.2; s *= 1 + .1 * Math.sin(now / 420 + o.ph * 3); }
+    else s *= .6 + .4 * u;
+    tX.globalAlpha = u < 1 ? clamp(u * 5) : 1; tX.drawImage(SPR[o.k], x - s / 2, y - s / 2, s, s);
+  }
+  if (t > 5200 && Math.random() < .12) { const o = bl[Math.floor(Math.random() * bl.length)]; pt.push({ x: o.tx, y: o.ty, vy: rnd(.35, .9), ph: rnd(0, 6), s: rnd(9, 16), k: o.k }); }
+  pt = pt.filter(q => q.y < by);
+  for (const q of pt) { q.y += q.vy; q.x += Math.sin(q.y / 28 + q.ph) * .7; tX.globalAlpha = clamp((by - q.y) / 40) * .85; tX.drawImage(SPR[q.k], q.x - q.s / 2, q.y - q.s / 2, q.s, q.s); }
+  tX.globalAlpha = 1;
+  if (!shown && t > 4200) {
+    shown = true; $('#msg').classList.add('show'); buzz(60);
+    const r = $('#treeBox').getBoundingClientRect(); for (let i = 0; i < 5; i++) setTimeout(() => spark(r.left + geo.bx + rnd(-geo.R, geo.R), r.top + geo.cy + rnd(-geo.R * .6, geo.R * .5), 12, 3), i * 200);
+  }
+}
+function startTree() {
+  $('#nm').textContent = NAME; FINAL.forEach((t, i) => $('#l' + i).textContent = t); $('#by').textContent = FROM ? '— ' + FROM : '';
+  sizeTree(); T0 = performance.now(); shown = false; pt = []; running = true;
+  new ResizeObserver(() => { if (running) sizeTree(); }).observe($('#treeBox'));
+}
+$('#again').addEventListener('click', () => location.reload());
+
+/* ---------- main loop ---------- */
+function loop(now) {
+  sX.clearRect(0, 0, W, H);
+  for (const s of stars) { s.y -= s.s; if (s.y < -2) { s.y = H + 2; s.x = rnd(0, W); } sX.globalAlpha = .3 + .5 * Math.abs(Math.sin(now / 1400 + s.p)); sX.fillStyle = '#fff'; sX.beginPath(); sX.arc(s.x, s.y, s.r, 0, 6.3); sX.fill(); }
+  if (!shoot && Math.random() < .002) shoot = { x: rnd(0, W * .7), y: rnd(0, H * .3), l: 0 };
+  if (shoot) {
+    shoot.x += 9; shoot.y += 4; shoot.l++;
+    const g = sX.createLinearGradient(shoot.x - 70, shoot.y - 31, shoot.x, shoot.y); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, '#fff');
+    sX.globalAlpha = 1; sX.strokeStyle = g; sX.lineWidth = 1.5; sX.beginPath(); sX.moveTo(shoot.x - 70, shoot.y - 31); sX.lineTo(shoot.x, shoot.y); sX.stroke();
+    if (shoot.l > 50) shoot = null;
+  }
+  fX.clearRect(0, 0, W, H);
+  sp = sp.filter(p => p.life++ < p.max);
+  for (const p of sp) { p.x += p.vx; p.y += p.vy; p.vy += .03; fX.globalAlpha = 1 - p.life / p.max; fX.drawImage(SPR[p.k], p.x - p.s / 2, p.y - p.s / 2, p.s, p.s); }
+  if (running && tX) drawTree(now);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
